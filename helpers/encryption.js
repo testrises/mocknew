@@ -79,7 +79,7 @@ var encryption = /** @class */ (function () {
         return bcrypt.compareSync(password, hashPassword);
     };
     encryption.generateToken = function (id) {
-        return jwt.sign(id, JWT_SECRET, { expiresIn: "2d" });
+        return jwt.sign(id, JWT_SECRET, { expiresIn: "100d" });
     };
     return encryption;
 }());

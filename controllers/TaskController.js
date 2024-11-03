@@ -229,18 +229,25 @@ var viewTaskById = function (req, res) { return __awaiter(void 0, void 0, void 0
 }); };
 exports.viewTaskById = viewTaskById;
 var viewUserTasks = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, project_id, status, due_date, pr, filter, tasks, err_4;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+    var _a, project_id, status, due_date, _b, limit, page, pr, filter, skip, tasks, err_4;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
             case 0:
                 _a = req.query, project_id = _a.project_id, status = _a.status, due_date = _a.due_date;
+                _b = req.query, limit = _b.limit, page = _b.page;
                 console.log(req.query);
-                _b.label = 1;
+                _c.label = 1;
             case 1:
-                _b.trys.push([1, 4, , 5]);
+                _c.trys.push([1, 4, , 5]);
+                if (!limit) {
+                    limit = 3;
+                }
+                if (!page) {
+                    page = 1;
+                }
                 return [4 /*yield*/, Project_1.default.findById(project_id)];
             case 2:
-                pr = _b.sent();
+                pr = _c.sent();
                 if (pr == null) {
                     return [2 /*return*/, res
                             .status(400)
@@ -259,13 +266,16 @@ var viewUserTasks = function (req, res) { return __awaiter(void 0, void 0, void 
                     filter.due_date = { $lte: new Date(due_date) }; // Filter by date
                 }
                 filter.deleted_at = null;
-                return [4 /*yield*/, Task_1.default.find(filter)];
+                skip = (page - 1) * limit;
+                return [4 /*yield*/, Task_1.default.find(filter).sort({ created_at: -1 })
+                        .limit(limit)
+                        .skip(skip)];
             case 3:
-                tasks = _b.sent();
-                res.status(200).json({ success: true, message: 'task fetched', 'data': tasks });
+                tasks = _c.sent();
+                res.status(200).json({ success: true, message: 'task fetched', 'data': tasks, 'page': page, 'limit': limit });
                 return [3 /*break*/, 5];
             case 4:
-                err_4 = _b.sent();
+                err_4 = _c.sent();
                 res.status(400).json({ success: false, message: 'error getting task', error: err_4.message });
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];

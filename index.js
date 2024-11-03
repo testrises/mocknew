@@ -50,6 +50,6 @@ process
 (0, db_1.connectDB)();
 // start express server
 app.listen(3000);
-//export default app;
+exports.default = app;
 console.log("Express server has started ");
 //# sourceMappingURL=index.js.map
